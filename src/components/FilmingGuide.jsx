@@ -11,11 +11,23 @@ import FilmingCamera from "@/components/motion/FilmingCamera";
  * with JavaScript off, or reduced motion on, the advice below is unchanged.
  */
 
+/*
+  The camera position changed on 2026-10-01, when serve speed shipped. It used
+  to be chest height; serve speed finds the court from its lines and the net,
+  and a camera at 2 m or lower sees the far half hidden behind the net. The
+  app's best development camera sat about 3 m up and 6.5–7 m behind the
+  baseline — the back fence — so that is the spot the guide now asks for.
+*/
 const tips = [
   {
-    term: "Put the phone behind the player",
+    term: "Put the phone up high, behind the court",
     detail:
-      "Roughly chest height, with the whole player in frame. A fence post, a bag or a small tripod all work — it only has to stay still.",
+      "Centred behind the baseline and about 3 m up — the top of the back fence is usually right. Check that all four corners of the court are in frame, and the whole near player. A fence clamp or a tall tripod both work; it only has to stay still.",
+  },
+  {
+    term: "Record at 60 fps",
+    detail:
+      "Serve speed is built for 60 frames per second: a fast serve travels almost a metre between two frames at 60 fps, and twice that at 30. On an iPhone: Settings → Camera → Record Video → 1080p at 60 fps.",
   },
   {
     term: "Only the near player is analysed",

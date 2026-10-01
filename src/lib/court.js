@@ -71,8 +71,13 @@ export function ballAt(t) {
   };
 }
 
-/** Where the phone belongs: behind the near baseline, at chest height. */
-export const CAMERA_SPOT = { x: 0, y: 1.42, z: L + 2.6 };
+/**
+ * Where the phone belongs: centred on the back fence, 3 m up and 6.5 m behind
+ * the near baseline. That is where the app's best development camera sat for
+ * serve speed; at 2 m or lower the far court hides behind the net. It was
+ * chest height (1.42 m, 2.6 m back) until 2026-10-01.
+ */
+export const CAMERA_SPOT = { x: 0, y: 3, z: L + 6.5 };
 
 /** The high overview the filming scene starts from. */
 export const CAMERA_OVERVIEW = { x: 0, y: 24, z: 26 };

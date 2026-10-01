@@ -5,12 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import { loadScrollTrigger, prefersReducedMotion } from "@/lib/motion";
 
 /*
-  BallSpeed — the two-part job the card describes: calibrate the court by
-  clicking its four corners, then read a speed off a few marked frames.
+  BallSpeed — the two-part job the card describes: find the court, then read
+  a speed off the serve.
 
-  The four corners light one at a time as you scroll, and only once all four
+  The four corners light one at a time as you scroll (the app finds them on
+  its own, and only asks for clicks when it cannot), and only once all four
   are lit does the readout count. That order is the point: there is no number
-  before the calibration.
+  before the court is found.
 
   The figure is an example, labelled as one — the app measures, it does not
   promise a number. Decorative and aria-hidden.

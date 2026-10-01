@@ -20,7 +20,7 @@ import KeycapSequence from "@/components/motion/KeycapSequence";
 const steps = [
   {
     title: "Film",
-    body: "Prop your phone behind the player at about chest height and record the session. Any recent phone is good enough.",
+    body: "Fix your phone high behind the court — about 3 m up, all four corners in frame — and record at 60 fps. Any recent phone is good enough.",
   },
   {
     title: "Import",

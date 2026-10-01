@@ -10,9 +10,9 @@ import { hasWebGL, prefersReducedMotion } from "@/lib/motion";
   FilmingCamera — the pinned scene above the filming advice.
 
   As the section is pinned, the camera travels from a high overview of the
-  whole court down to the one place the guide is asking for: behind the near
-  baseline, at chest height. The instruction and the picture are the same
-  sentence.
+  whole court down to the one place the guide is asking for: centred behind
+  the near baseline, about 3 m up on the back fence, with all four corners of
+  the court in view. The instruction and the picture are the same sentence.
 
   Reduced motion, or no WebGL, and the block renders the static court with the
   spot marked and a plain caption. The advice is in the <dl> underneath either
@@ -38,8 +38,8 @@ export default function FilmingCamera() {
         {enhance ? <FilmingCameraScene /> : <CourtFallback ball={0.55} />}
       </div>
       <figcaption className="home__guide-scene-caption">
-        Where the phone goes: behind the near player, at chest height, whole
-        player in frame.
+        Where the phone goes: centred behind the court, about 3 m up, with all
+        four corners of the court in frame. Record at 60 fps.
       </figcaption>
     </figure>
   );

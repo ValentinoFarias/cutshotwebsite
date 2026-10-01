@@ -10,13 +10,20 @@ import { cappedPixelRatio, loadScrollTrigger, observeVisibility } from "@/lib/mo
   FilmingCameraScene — the scrubbed camera move.
 
   A ScrollTrigger pins the figure and scrubs a single number, 0 to 1. At 0 the
-  camera is 24 m up, looking at the whole court; at 1 it is standing 2.6 m
-  behind the near baseline at 1.42 m — chest height on most people, and the
-  exact framing the guide describes.
+  camera is 24 m up, looking at the whole court; at 1 it is on the back fence,
+  6.5 m behind the near baseline and 3 m up, with all four corners of the court
+  in view — the exact framing the guide describes.
 
   Scrub, not autoplay: the visitor owns the timing, and scrolling back up puts
   the camera back. No frame is drawn while the canvas is off-screen.
 */
+
+/* Vertical field of view, in degrees, at each end of the move. The lens
+   widens on the way down: at 38° the near corners would fall outside a 16:10
+   frame from the fence. At 56° all eight corners (singles and doubles) are in
+   frame at both 16:10 and 16:9 — checked by projecting them with three.js. */
+const FOV_OVERVIEW = 38;
+const FOV_SPOT = 56;
 
 export default function FilmingCameraScene() {
   const hostRef = useRef(null);
@@ -59,7 +66,7 @@ export default function FilmingCameraScene() {
         marker.position.set(CAMERA_SPOT.x, CAMERA_SPOT.y, CAMERA_SPOT.z);
         scene.add(marker);
 
-        const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 300);
+        const camera = new THREE.PerspectiveCamera(FOV_OVERVIEW, 1, 0.1, 300);
 
         try {
           renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -80,9 +87,13 @@ export default function FilmingCameraScene() {
             CAMERA_OVERVIEW.y + (CAMERA_SPOT.y - CAMERA_OVERVIEW.y) * t,
             CAMERA_OVERVIEW.z + (CAMERA_SPOT.z - CAMERA_OVERVIEW.z) * t,
           );
-          /* Look at the middle of the court early, at the far baseline late —
-             which is what you see standing behind a player. */
-          camera.lookAt(0, 0.6 * t, -t * 6);
+          /* Widen the lens as the camera comes down to the fence. */
+          camera.fov = FOV_OVERVIEW + (FOV_SPOT - FOV_OVERVIEW) * t;
+          camera.updateProjectionMatrix();
+          /* Look at the net early, and 4 m on the near side of it late: from
+             3 m up that tilt centres the whole court in the frame, near
+             baseline low and far baseline high, all four corners in view. */
+          camera.lookAt(0, 0, 4 * t);
           /* The marker only matters once you are near it. */
           marker.visible = t > 0.45;
           renderer.render(scene, camera);

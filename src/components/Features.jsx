@@ -133,14 +133,18 @@ export default function Features() {
             </p>
           </li>
 
+          {/* Shipped in the app (serve speed, 2026-09-30), so no longer struck
+              out. "Serves only" and "60 fps" are in the copy so the card never
+              promises more than the app measures. */}
           <li className="home__feature">
-            <h3 className="home__feature-title home__feature-title--wip">
-              <Struck>Ball speed</Struck>
-              <WipNote />
-            </h3>
+            <h3 className="home__feature-title">Ball speed</h3>
             <p className="home__feature-body">
-              Calibrate the court once by clicking its four corners, then measure a shot
-              by marking the ball across a few frames.
+              Every serve gets a Speed button. CutShot finds the court in that serve’s
+              own clip, follows the ball from the racket to the first bounce, and gives
+              two figures: the speed off the racket — what a radar gun reads — and the
+              average over the flight, in km/h or mph. If it cannot find the court, it
+              asks you to click the four corners once. Serves only for now, filmed at
+              60 fps.
             </p>
             <BallSpeed />
           </li>
