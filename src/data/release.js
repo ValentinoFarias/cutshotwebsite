@@ -11,8 +11,8 @@
  * Windows is a single 64-bit build.
  */
 export const release = {
-  version: "1.2.0",
-  releasedAt: "2026-09-22",
+  version: "1.3.0",
+  releasedAt: "2026-10-01",
   /* No URLs here on purpose. This file is imported by client components, so
      anything in it ships to the browser; the download links live server-side
      in src/lib/downloads.js and are handed out by /api/download only once the
@@ -32,9 +32,10 @@ export const release = {
     contact: "valentinofariascarrion@gmail.com",
   },
   notes: [
-    "Trial keys: the app asks for one the first time it opens.",
-    "A separate macOS build for Intel Macs, beside the Apple Silicon one.",
-    "Stroke detection is now a trained model: far fewer wrong tags to delete.",
+    "Serve speed (beta): a Speed button on every serve, with the speed off the racket and the average over the flight.",
+    "Four colour themes — Original, Clay, Grass and Hard — from the CUTSHOT name.",
+    "Manual marking behind one button; the shot type menu is down to Forehand, Backhand, Serve and NI.",
+    "The welcome tour covers serve speed and the themes.",
   ],
 };
 

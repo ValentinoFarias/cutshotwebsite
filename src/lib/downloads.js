@@ -27,13 +27,13 @@
 */
 
 const RELEASE_BASE =
-  "https://github.com/ValentinoFarias/cutshotwebsite/releases/download/app-v1.2.0";
+  "https://github.com/ValentinoFarias/cutshotwebsite/releases/download/app-v1.3.0";
 
 /** Build id (as the page sends it) → the file it downloads. */
 const TARGETS = {
-  "mac-arm64": `${RELEASE_BASE}/CutShot-1.2.0-mac-arm64.dmg`,
-  "mac-intel": `${RELEASE_BASE}/CutShot-1.2.0-mac-x64.dmg`,
-  "win-x64": `${RELEASE_BASE}/CutShot-1.2.0-win-x64.exe`,
+  "mac-arm64": `${RELEASE_BASE}/CutShot-1.3.0-mac-arm64.dmg`,
+  "mac-intel": `${RELEASE_BASE}/CutShot-1.3.0-mac-x64.dmg`,
+  "win-x64": `${RELEASE_BASE}/CutShot-1.3.0-win-x64.exe`,
 };
 
 /**
