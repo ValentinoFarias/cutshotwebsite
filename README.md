@@ -1,7 +1,7 @@
 # CutShot website
 
-The one-page site for CutShot: what the app does, where to download it, and a
-form for testers to tell you what broke.
+The site for CutShot: one page saying what the app does and where to download
+it, plus a ten-question survey for testers at `/survey`.
 
 Next.js App Router, plain `.jsx`, one CSS file, deployed on Netlify. No backend.
 
@@ -19,8 +19,8 @@ Nothing on the list generates itself. Everything here is a literal
 | --- | --- | --- |
 | `{{YYYY-MM-DD}}` | `src/data/release.js` → `releasedAt` | The release date. Not currently rendered anywhere, but keep it true — it is the record of when this build went out. |
 All of these were filled in on 2026-09-22 for the 1.2.0 release: `release.js`
-carries real URLs, sizes and dates, and `FeedbackForm.jsx` carries the real
-address. The table is kept as the description of what each field is for.
+carries real URLs, sizes and dates. The table is kept as the description of
+what each field is for.
 
 | Field | Where | What goes there |
 | --- | --- | --- |
@@ -76,8 +76,8 @@ npm run build   # what Netlify runs
 
 There is no test suite and no linter config. `npm run build` is the gate.
 
-> Note on `npm run dev`: the feedback form POSTs to `/__forms.html`, which only
-> Netlify answers. Locally the submit will fail and show the error state plus the
+> Note on `npm run dev`: the survey POSTs to `/__forms.html`, which only
+> Netlify answers. Locally the send will fail and show the error state plus the
 > `mailto:` fallback — that is the failure path working correctly, not a bug.
 > To test the form for real, use a Netlify deploy preview.
 
@@ -109,7 +109,7 @@ to serve them and the repo would carry them forever.
 4. Redeploy (a push to the deploy branch is enough).
 
 The version number shows in the hero, the download cards and the footer, and
-rides along with every feedback submission as `appVersion`, so bumping it in one
+rides along with every survey submission as `appVersion`, so bumping it in one
 place is the whole job.
 
 **A placeholder or empty URL is a safe state.** `isDownloadReady()` in
@@ -157,12 +157,21 @@ restricted.
 
 ## 4. Reading form submissions
 
-**Netlify dashboard → Forms → `feedback`.** Every submission lands there with
-`name`, `email`, `platform`, `topic`, `message`, plus `appVersion` and
-`userAgent` filled in automatically, so you never have to ask "which version?"
-or "which OS?".
+**Netlify dashboard → Forms → `survey`.** Every submission lands there with one
+field per question, holding the answer's text as the visitor saw it (a "Which
+parts did you use?" answer with several ticks arrives as one comma-separated
+line), the optional `comments`, plus `appVersion` and `userAgent` filled in
+automatically, so you never have to ask "which version?" or "which OS?".
 
-Two settings worth turning on straight away:
+The survey replaced a free-text feedback form on 2026-10-03. **That form never
+delivered anything:** the site had Netlify's form detection switched off
+(`ignore_html_forms: true`), so no form was ever registered and every
+submission was lost.
+
+**Form detection must be ON** — Site configuration → Forms → *Enable form
+detection* — or nothing below matters. It takes effect from the next deploy.
+
+Two more settings worth turning on straight away:
 
 - **Notifications → email notification → `{{CONTACT_EMAIL}}`.** Otherwise you
   only find out by remembering to look.
@@ -174,8 +183,8 @@ Two settings worth turning on straight away:
 
 Netlify's build-time crawler registers a form only if it can find it in **static
 HTML**. It cannot see a React-rendered form. `public/__forms.html` is a hidden
-copy of the form that exists purely to be crawled, and `FeedbackForm.jsx` POSTs
-to that same path as urlencoded data.
+copy of the form that exists purely to be crawled, and `Survey.jsx` POSTs to
+that same path as urlencoded data.
 
 Delete it, or rename a field in it, and the form silently stops working:
 submissions 404 and nothing reaches the dashboard. There is no error anywhere.
@@ -183,11 +192,13 @@ submissions 404 and nothing reaches the dashboard. There is no error anywhere.
 The field names must match **exactly**, in both files:
 
 ```
-form-name   bot-field   name   email   platform   topic   message   appVersion   userAgent
+form-name   bot-field   install   intuitive   shotsFound   strokeTypes
+serveSpeed   analysisTime   featuresUsed   recommend   wouldPay   fairPrice
+comments   appVersion   userAgent
 ```
 
-If you add a field to the React form, add it to `public/__forms.html` in the
-same commit.
+The question names come from the `questions` list in `Survey.jsx`. If you add or
+rename a question there, change `public/__forms.html` in the same commit.
 
 ---
 
@@ -214,7 +225,7 @@ Worth knowing before changing anything:
   layout. No CSS modules, no Tailwind, no styled-anything.
 - **Twelve fixed banner sections in that file, in a fixed order:** tokens, base,
   navbar, hero, how it works, features, screenshots, filming guide, download,
-  feedback, footer, responsive. A component's styles go in its own banner and
+  footer, survey page, responsive. A component's styles go in its own banner and
   nowhere else. **Every `@media` block lives in RESPONSIVE**, smallest to
   largest — the one exception is the `prefers-reduced-motion` kill switch in
   BASE, which is a global reset concern rather than a breakpoint.
@@ -223,17 +234,17 @@ Worth knowing before changing anything:
 - **`home__` BEM-like class names** for everything, including the client
   components.
 - **Server components by default.** The client components are
-  `DownloadCards.jsx`, `InstallNotes.jsx`, `FeedbackForm.jsx`, plus the
+  `DownloadCards.jsx`, `InstallNotes.jsx`, `Survey.jsx`, plus the
   motion-only ones in `src/components/motion/` (see §7). Anything that is not
   interactivity or motion stays a server component and needs a reason to change.
   Anything the browser knows — the OS guess, the user-agent string — is
   read in an effect *after* mount, never during render, so the server HTML and
   the first client render always agree and hydration never mismatches.
-- **One `<h1>` on the page**, and it belongs to the hero. Every section uses
-  `<h2>` and carries `aria-labelledby`.
+- **One `<h1>` per page**: the hero's on the home page, the survey's title on
+  `/survey`. Every other section uses `<h2>` and carries `aria-labelledby`.
 - **Clay (`--color-clay`) is the one accent.** It is the brand dot, links, the
   how-it-works progress line, the "work in progress" marks, the detected-platform
-  outline on a download card, and the feedback submit button. Full-width clay
+  outline on a download card, and the survey's send button. Full-width clay
   section bands were tried and dropped: sections stay paper or stage. The primary
   download buttons are deliberately ink, not clay. The section eyebrows
   ("Tennis training video", "What it does", …) and the 01–04 step numbers are

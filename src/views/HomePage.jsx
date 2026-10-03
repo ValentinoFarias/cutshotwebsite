@@ -32,7 +32,6 @@
 
 import DownloadCards from "@/components/DownloadCards";
 import Features from "@/components/Features";
-import FeedbackForm from "@/components/FeedbackForm";
 import FilmingGuide from "@/components/FilmingGuide";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -67,12 +66,11 @@ export default function HomePage() {
             cards. Client component: OS detection and the copy-link button. */}
         <DownloadCards />
 
-        {/* 8. Feedback — T3. Owns id="feedback". Client component: Netlify
-            Forms, posted as urlencoded data to /__forms.html. */}
-        <FeedbackForm />
+        {/* The feedback form that used to close the page was replaced on
+            2026-10-03 by the questionnaire at /survey (SurveyPage.jsx). */}
       </main>
 
-      {/* 9. Footer — T2 */}
+      {/* 8. Footer — T2 */}
       <Footer />
     </>
   );

@@ -9,12 +9,19 @@
       Build-time crawler bait for Netlify Forms.
       Netlify only registers a form it can find in static HTML at deploy time;
       a React-rendered form is invisible to it and its POSTs 404 silently.
-      Field names here MUST stay in sync with the real feedback form.
+      Field names here MUST stay in sync with the questions in
+      src/components/Survey.jsx: one input per question `name`, plus the fixed
+      fields on the first and last lines.
+      Netlify's "form detection" must also be ON for the site (Site
+      configuration → Forms), or this file is never read at all.
     -->
-    <form name="feedback" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
-      <input type="hidden" name="form-name" value="feedback" />
-      <input name="bot-field" /><input name="name" /><input name="email" />
-      <input name="platform" /><input name="topic" /><textarea name="message"></textarea>
+    <form name="survey" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="survey" />
+      <input name="bot-field" />
+      <input name="install" /><input name="intuitive" /><input name="shotsFound" />
+      <input name="strokeTypes" /><input name="serveSpeed" /><input name="analysisTime" />
+      <input name="featuresUsed" /><input name="recommend" /><input name="wouldPay" />
+      <input name="fairPrice" /><textarea name="comments"></textarea>
       <input name="appVersion" /><input name="userAgent" />
     </form>
   </body>

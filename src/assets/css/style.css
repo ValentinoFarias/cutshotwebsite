@@ -444,6 +444,37 @@ canvas {
 }
 
 
+/* ---- Shared primitive: form fields ------------------------------------------- */
+
+/* The text box used by the download code dialog and the survey's comment box.
+   16px on purpose: anything smaller makes iOS Safari zoom the page when the
+   field takes focus. */
+.home__input,
+.home__textarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: var(--control-height);
+  padding: var(--space-2xs) var(--space-xs);
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-elevated);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  transition: border-color var(--transition-fast);
+}
+
+.home__textarea {
+  min-height: calc(var(--control-height) * 3);
+  resize: vertical;
+}
+
+.home__input[aria-invalid="true"],
+.home__textarea[aria-invalid="true"] {
+  border-color: var(--color-red);
+}
+
+
 /* ---- Shared primitive: screenshot wells ------------------------------------------ */
 
 /* True black, because the app's own UI is dark and screenshots must not float
@@ -625,6 +656,15 @@ canvas {
   text-underline-offset: var(--space-3xs);
 }
 
+/* The page you are on (only /survey has its own link): a clay underline, a
+   small mark rather than a block of colour. After :hover so it wins there too. */
+.home__nav-link[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--color-clay);
+  text-decoration-thickness: var(--focus-ring-width);
+  text-underline-offset: var(--space-2xs);
+}
+
 /* The hairline appears once the page has scrolled. CSS only: a scroll-driven
    animation, no listener and no JavaScript anywhere near it. Browsers without
    `animation-timeline` never enter the @supports block and keep the always-on
@@ -751,7 +791,7 @@ canvas {
   transform: translate(-50%, -50%);
 }
 
-/* Shared by the hero and feedback marks. */
+/* Shared by the hero and survey marks. */
 .home__watermark-image {
   width: 100%;
   height: auto;
@@ -1457,8 +1497,8 @@ canvas {
   font-size: var(--text-xs);
 }
 
-/* Everything about the box itself comes from .home__input, which the feedback
-   form uses too. This adds only what is true of a code and not of a name. */
+/* Everything about the box itself comes from .home__input (a shared primitive
+   in BASE). This adds only what is true of a code and not of a name. */
 .home__code-input {
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1600,216 +1640,6 @@ canvas {
 
 
 /* =============================================================================
-   FEEDBACK  (FeedbackForm.jsx)
-   Netlify-backed feedback form: fields, validation, success and error states.
-   T3 fills this section. Leave the banner where it is.
-   ============================================================================= */
-
-/* The brand mark closes the page, small and tucked into the bottom-right
-   corner, level with the right edge of the content. On wide screens it sits in
-   the free space beside the form, so nothing covers it. The section clips it,
-   so it can never widen the page. */
-.home__feedback {
-  position: relative;
-  overflow: clip;
-}
-
-.home__feedback-watermark {
-  position: absolute;
-  inset-block-end: 0;
-  inset-inline-end: max(var(--container-gutter), calc((100% - var(--container-max)) / 2));
-  z-index: var(--z-base);
-  width: min(16rem, 55%);
-  color: var(--color-ink);
-  opacity: 0.08;
-  pointer-events: none;
-}
-
-.home__feedback-inner {
-  position: relative;
-  z-index: 1;
-}
-
-.home__feedback-useful {
-  margin-block-end: var(--space-xl);
-}
-
-.home__feedback-useful-title {
-  margin-block: 0 var(--space-2xs);
-  font-size: var(--text-md);
-}
-
-.home__feedback-list {
-  max-width: var(--measure-prose);
-  margin: 0;
-  padding-inline-start: var(--space-md);
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-}
-
-.home__feedback-form {
-  display: grid;
-  gap: var(--space-md);
-}
-
-.home__feedback-row {
-  display: grid;
-  gap: var(--space-md);
-}
-
-.home__field {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.home__label {
-  margin-block-end: var(--space-3xs);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-}
-
-.home__label-optional {
-  margin-inline-start: var(--space-3xs);
-  color: var(--color-text-secondary);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-regular);
-}
-
-/* 16px on the inputs, deliberately: anything smaller makes iOS Safari zoom the
-   page when the field takes focus. */
-.home__input,
-.home__select,
-.home__textarea {
-  width: 100%;
-  max-width: 100%;
-  min-height: var(--control-height);
-  padding: var(--space-2xs) var(--space-xs);
-  border: var(--border-hairline);
-  border-radius: var(--radius-md);
-  background-color: var(--color-elevated);
-  color: var(--color-text);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-  transition: border-color var(--transition-fast);
-}
-
-.home__textarea {
-  min-height: calc(var(--control-height) * 4);
-  resize: vertical;
-}
-
-.home__input[aria-invalid="true"],
-.home__textarea[aria-invalid="true"] {
-  border-color: var(--color-red);
-}
-
-.home__field-hint {
-  margin-block-start: var(--space-3xs);
-  color: var(--color-text-secondary);
-  font-size: var(--text-xs);
-  line-height: var(--leading-normal);
-}
-
-.home__field-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2xs);
-}
-
-.home__char-count {
-  margin-block-start: var(--space-3xs);
-  color: var(--color-text-secondary);
-  font-size: var(--text-xs);
-}
-
-.home__field-error {
-  margin-block-start: var(--space-2xs);
-  color: var(--color-red);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  line-height: var(--leading-normal);
-}
-
-.home__form-error {
-  max-width: var(--measure-prose);
-  margin-block-start: var(--space-2xs);
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-}
-
-.home__form-error-text {
-  color: var(--color-red);
-  font-weight: var(--weight-medium);
-}
-
-/* The two live regions stay in the DOM at all times so a screen reader is
-   already watching them — hiding them with `display: none` and revealing them
-   later is exactly how a polite announcement gets swallowed. Empty, they draw
-   nothing and take no space; only the margin has to be collapsed. */
-.home__field-error:empty,
-.home__form-error:empty {
-  margin-block: 0;
-}
-
-.home__feedback-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-/* One of clay's few permitted outings: this is the single action the whole
-   page is built around. */
-.home__feedback-submit {
-  padding-inline: var(--space-lg);
-  border-color: var(--color-clay);
-  background-color: var(--color-clay);
-  color: var(--color-on-accent);
-  font-size: var(--text-base);
-}
-
-.home__feedback-submit:hover {
-  opacity: var(--opacity-hover);
-}
-
-/* Busy state: still unmistakably the submit button, just not pressable. */
-.home__feedback-submit:disabled,
-.home__feedback-submit:disabled:hover {
-  background-color: var(--color-clay);
-  opacity: var(--opacity-disabled);
-}
-
-.home__feedback-fallback {
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-}
-
-.home__feedback-success {
-  padding: var(--space-lg);
-  border: var(--border-width-hairline) solid var(--color-clay);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-elevated);
-  box-shadow: var(--shadow-soft);
-}
-
-.home__feedback-success-title {
-  margin-block: 0 var(--space-2xs);
-  font-size: var(--text-lg);
-}
-
-.home__feedback-success-body {
-  max-width: var(--measure-prose);
-  margin-block-end: var(--space-sm);
-  color: var(--color-text-secondary);
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-}
-
-
-/* =============================================================================
    FOOTER  (Footer.jsx)
    Closing hairline, brand line, secondary links.
    T2 fills this section. Leave the banner where it is.
@@ -1846,6 +1676,217 @@ canvas {
 
 
 /* =============================================================================
+   SURVEY PAGE  (SurveyPage.jsx, Survey.jsx)
+   The /survey questionnaire: tap-to-answer boxes, the 1–10 scale, send states.
+   ============================================================================= */
+
+/* The brand mark sits small in the bottom-right corner, level with the right
+   edge of the content, where it used to close the home page. The section clips
+   it, so it can never widen the page. */
+.home__survey {
+  position: relative;
+  overflow: clip;
+}
+
+.home__survey-watermark {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: max(var(--container-gutter), calc((100% - var(--container-max)) / 2));
+  z-index: var(--z-base);
+  width: min(16rem, 55%);
+  color: var(--color-ink);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+/* Everything that must read sits above the mark. */
+.home__survey-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.home__survey-form {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+/* The legends draw their own 01–10 numbers, so the list's markers go. */
+.home__survey-list {
+  display: grid;
+  gap: var(--space-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Browsers give a fieldset a border, padding and a min-width that would fight
+   the layout; the question is only grouped, not boxed. */
+.home__survey-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Used for the question titles and for the "Anything else?" label, so the
+   comment box reads as one more question. Padding rather than margin, because
+   browsers lay a legend out differently and margins on it are unreliable. */
+.home__survey-legend {
+  display: block;
+  padding: 0 0 var(--space-xs);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+/* 01–10 in clay, like the step numbers in How it works. */
+.home__survey-number {
+  margin-inline-end: var(--space-xs);
+  color: var(--color-clay-text);
+  font-size: var(--text-sm);
+}
+
+.home__survey-hint {
+  margin-block: 0 var(--space-xs);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+.home__survey-optional {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-regular);
+}
+
+/* Answers wrap onto as many rows as they need, so long and short options both
+   sit naturally at any width. */
+.home__survey-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+/* The 1–10 scale: equal boxes, five to a row on phones and all ten in one row
+   from 42rem (see RESPONSIVE). */
+.home__survey-options--scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+/* Each answer is a box to tap. The real radio or checkbox is visually hidden
+   inside it; `position: relative` keeps that hidden input anchored here. */
+.home__survey-option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: var(--space-2xs) var(--space-sm);
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  background-color: var(--color-elevated);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.home__survey-option:hover {
+  border-color: var(--color-text-secondary);
+}
+
+/* Chosen: ink, like the selected day in the app's calendar. Clay is kept for
+   the one button that sends. */
+.home__survey-option--chosen,
+.home__survey-option--chosen:hover {
+  border-color: var(--color-ink);
+  background-color: var(--color-ink);
+  color: var(--color-on-accent);
+}
+
+/* The input itself is invisible, so its keyboard focus ring is drawn on the
+   box around it instead. */
+.home__survey-option:has(.home__survey-input:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.home__survey-comments {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The button, with the message line directly under it. */
+.home__survey-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+}
+
+/* One of clay's few permitted outings: this is the single action the page is
+   built around. */
+.home__survey-submit {
+  padding-inline: var(--space-lg);
+  border-color: var(--color-clay);
+  background-color: var(--color-clay);
+  color: var(--color-on-accent);
+  font-size: var(--text-base);
+}
+
+.home__survey-submit:hover {
+  opacity: var(--opacity-hover);
+}
+
+/* Busy state: still unmistakably the send button, just not pressable. */
+.home__survey-submit:disabled,
+.home__survey-submit:disabled:hover {
+  background-color: var(--color-clay);
+  opacity: var(--opacity-disabled);
+}
+
+/* Stays in the page even when empty, so a screen reader is already watching
+   it when a message appears; empty, it draws nothing. */
+.home__form-error {
+  max-width: var(--measure-prose);
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.home__form-error-text {
+  color: var(--color-red);
+  font-weight: var(--weight-medium);
+}
+
+.home__survey-success {
+  padding: var(--space-lg);
+  border: var(--border-width-hairline) solid var(--color-clay);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-elevated);
+  box-shadow: var(--shadow-soft);
+}
+
+.home__survey-success-title {
+  margin-block: 0 var(--space-2xs);
+  font-size: var(--text-lg);
+}
+
+.home__survey-success-body {
+  max-width: var(--measure-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+
+/* =============================================================================
    RESPONSIVE
    All breakpoints collected here, smallest to largest. No @media blocks live
    inside the section banners above (the reduced-motion query in BASE is the one
@@ -1872,13 +1913,17 @@ canvas {
 @media (min-width: 42rem) {
   .home__how-list,
   .home__features-grid,
-  .home__download-grid,
-  .home__feedback-row {
+  .home__download-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .home__guide-list {
     gap: var(--space-xl);
+  }
+
+  /* The survey's 1–10 scale fits on one line from here. */
+  .home__survey-options--scale {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
   }
 
   /* Wide enough that the visitor is plausibly on the machine they would
